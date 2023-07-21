@@ -14,6 +14,14 @@ type Fanout struct {
 	connected bool
 }
 
+/*
+
+Использовать мапу неправильно. Но я не догадался что будет правильным.
+Так что просто предполжения. слайс структур? Поиск будет O(n).
+sync.Map читал что решает определнные проблемы когда ключи стабильны.
+
+*/
+
 func NewFanout() *Fanout {
 	return &Fanout{channels: make(map[string]model.Client)}
 }
