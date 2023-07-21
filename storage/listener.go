@@ -1,7 +1,6 @@
 package storage
 
 import (
-	"fmt"
 	"log"
 	"time"
 
@@ -17,7 +16,7 @@ func ListenForDataUpdates(conf *config.Config) (*utils.Fanout, error) {
 	log.Println("fanout created")
 	reportProblem := func(ev pq.ListenerEventType, err error) {
 		if err != nil {
-			fmt.Println(err.Error())
+			panic(err)
 		}
 	}
 
@@ -25,13 +24,17 @@ func ListenForDataUpdates(conf *config.Config) (*utils.Fanout, error) {
 	log.Println("listener created")
 	err := l.Listen("data_updates")
 	if err != nil {
-		panic(err.Error())
+		panic(err)
 	}
 
+	log.Println("listen")
+
 	if err = l.Ping(); err != nil {
-		return nil, err
+		panic(err)
 	}
+
 	log.Println("ping")
+
 	go func() {
 		pingTicker := time.Tick(10 * time.Second)
 		for {
