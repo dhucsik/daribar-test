@@ -25,7 +25,7 @@ func ListenForDataUpdates(conf *config.Config) (*utils.Fanout, error) {
 	log.Println("listener created")
 	err := l.Listen("data_updates")
 	if err != nil {
-		return nil, err
+		panic(err.Error())
 	}
 
 	if err = l.Ping(); err != nil {

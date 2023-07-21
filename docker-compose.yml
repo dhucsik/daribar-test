@@ -1,0 +1,31 @@
+version: "3.9"
+
+volumes:
+  main-api_data:
+
+services:
+  main-app:
+    build: ./
+    command: ./app
+    ports:
+      - "8080:8"
+    volumes:
+      - .:/src
+    environment:
+      - GONOSUMDB=off
+      - TZ=Asia/Almaty
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:13.2-alpine
+    volumes:
+      - main-api_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - 5436:5432

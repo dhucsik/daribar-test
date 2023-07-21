@@ -27,10 +27,7 @@ func NewHandler(dataUpd *utils.Fanout, repo *storage.Storage, auth *middleware.J
 
 func (h *Handler) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	h.DataUpdates.Connected()
-	phone, err := h.Auth.GetPhoneFromHeader(req)
-	if err != nil {
-		http.Error(rw, err.Error(), http.StatusInternalServerError)
-	}
+	phone := h.Auth.GetPhoneFromHeader(req)[0]
 
 	quantity := h.Repo.GetOpenOrdersQuantity(phone)
 
@@ -45,6 +42,7 @@ func (h *Handler) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 		data, ok := <-updates
 		log.Println(data, ok)
 		if !ok {
+			h.DataUpdates.Disconnected()
 			return
 		}
 
@@ -61,6 +59,7 @@ func (h *Handler) SetSseHeaders(rw http.ResponseWriter) {
 func (h *Handler) pingAndFlush(rw http.ResponseWriter, data string) {
 	_, err := fmt.Fprintf(rw, "data: %s\n\n", data)
 	if err != nil {
+		h.DataUpdates.Disconnected()
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 		return
 	}

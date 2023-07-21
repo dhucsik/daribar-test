@@ -17,6 +17,8 @@ func main() {
 func run() error {
 	conf := config.NewConfig()
 
+	log.Println("Config - ", conf)
+
 	fanout, err := storage.ListenForDataUpdates(conf)
 	if err != nil {
 		return err
