@@ -4,7 +4,7 @@ COPY go.mod .
 COPY go.sum .
 RUN go mod download
 COPY . .
-RUN GO111MODULE="on" CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o app ./cmd
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o app ./cmd
 
 FROM alpine:latest as stage2
 WORKDIR /app

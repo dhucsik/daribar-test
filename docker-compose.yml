@@ -8,11 +8,10 @@ services:
     build: ./
     command: ./app
     ports:
-      - "8080:8"
+      - "8080:8080"
     volumes:
       - .:/src
     environment:
-      - GONOSUMDB=off
       - TZ=Asia/Almaty
     env_file:
       - .env
